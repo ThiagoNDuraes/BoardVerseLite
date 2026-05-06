@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "BoardVerse Lite",
-    "slug": "boardverse-lite",
+    "slug": "boardverse",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,7 +21,9 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.thiagonduraes.boardverselite",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,6 +31,12 @@
     "plugins": [
       "expo-sqlite"
     ],
-    "description": "Aplicativo mobile em React Native com TypeScript para cadastro e organização de jogos de tabuleiro, com persistência local em SQLite."
+    "description": "Aplicativo mobile em React Native com TypeScript para cadastro e organização de jogos de tabuleiro, com persistência local em SQLite.",
+    "extra": {
+      "eas": {
+        "projectId": "4507c997-193b-4509-90b4-200d342acd2e"
+      }
+    },
+    "owner": "thiagongduraess-organization"
   }
 }

@@ -71,3 +71,17 @@ Cada jogo cadastrado possui os seguintes campos:
 - complexidade
 - status
 - observações
+
+
+## Build do APK
+
+```bash
+npm install -g eas-cli
+npx expo install --check
+npx expo-doctor
+eas login
+eas whoami
+eas build --platform android --profile preview
+```
+
+O perfil `preview` no arquivo `eas.json` está configurado para gerar um arquivo `.apk` instalável no Android.
