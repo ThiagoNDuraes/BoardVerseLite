@@ -1,9 +1,10 @@
 import { Game, GameStatus } from '../types/game';
 
-export type GameStatusFilter = 'Todos' | GameStatus;
+export type GameStatusFilter = 'Todos' | 'Favoritos' | GameStatus;
 
 export const STATUS_FILTER_OPTIONS: GameStatusFilter[] = [
   'Todos',
+  'Favoritos',
   'Disponível',
   'Emprestado',
   'Zerado',
@@ -18,7 +19,11 @@ export function filterGames(
 
   return games.filter((game) => {
     const matchesStatus =
-      statusFilter === 'Todos' ? true : game.status === statusFilter;
+      statusFilter === 'Todos'
+        ? true
+        : statusFilter === 'Favoritos'
+          ? game.isFavorite === 1
+          : game.status === statusFilter;
 
     const searchableContent = [
       game.name,

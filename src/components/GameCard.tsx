@@ -19,7 +19,13 @@ export default function GameCard({ game, onPress }: Props) {
   return (
     <Pressable onPress={onPress} style={styles.card}>
       <View style={styles.cardTopRow}>
-        <Text style={styles.cardTitle}>{game.name}</Text>
+        <View style={styles.titleArea}>
+          <Text style={styles.cardTitle}>{game.name}</Text>
+
+          {game.isFavorite === 1 ? (
+            <Text style={styles.favoriteText}>★ Favorito</Text>
+          ) : null}
+        </View>
 
         <View style={[styles.statusBadge, { backgroundColor: badge.bg }]}>
           <Text style={[styles.statusBadgeText, { color: badge.text }]}>
@@ -52,16 +58,24 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   cardTopRow: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flexDirection: 'row',
     gap: 12,
     justifyContent: 'space-between',
   },
+  titleArea: {
+    flex: 1,
+  },
   cardTitle: {
     color: '#2f2116',
-    flex: 1,
     fontSize: 21,
     fontWeight: '800',
+  },
+  favoriteText: {
+    color: '#9a641f',
+    fontSize: 13,
+    fontWeight: '800',
+    marginTop: 4,
   },
   cardSubtitle: {
     color: '#7c5530',

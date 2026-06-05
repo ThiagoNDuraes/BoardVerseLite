@@ -2,6 +2,14 @@ import * as SQLite from 'expo-sqlite';
 
 export const database = SQLite.openDatabaseSync('boardverse.db');
 
+function columnExists(tableName: string, columnName: string) {
+  const columns = database.getAllSync<{ name: string }>(
+    `PRAGMA table_info(${tableName});`
+  );
+
+  return columns.some((column) => column.name === columnName);
+}
+
 export function initDatabase() {
   database.execSync(`
     CREATE TABLE IF NOT EXISTS games (
@@ -17,4 +25,11 @@ export function initDatabase() {
       notes TEXT
     );
   `);
+
+  if (!columnExists('games', 'isFavorite')) {
+    database.execSync(`
+      ALTER TABLE games
+      ADD COLUMN isFavorite INTEGER NOT NULL DEFAULT 0;
+    `);
+  }
 }

@@ -1,8 +1,10 @@
 import { database } from '../database/db';
-import { Game } from '../types/game';
+import { FavoriteValue, Game } from '../types/game';
 
 export function getGames(): Game[] {
-  return database.getAllSync<Game>('SELECT * FROM games ORDER BY name ASC;');
+  return database.getAllSync<Game>(
+    'SELECT * FROM games ORDER BY isFavorite DESC, name ASC;'
+  );
 }
 
 export function getGameById(id: number): Game | null {
@@ -17,8 +19,8 @@ export function getGameById(id: number): Game | null {
 export function createGame(game: Game) {
   database.runSync(
     `INSERT INTO games
-      (name, domain, category, minPlayers, maxPlayers, playTime, complexity, status, notes)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+      (name, domain, category, minPlayers, maxPlayers, playTime, complexity, status, notes, isFavorite)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
     [
       game.name,
       game.domain,
@@ -29,6 +31,7 @@ export function createGame(game: Game) {
       game.complexity,
       game.status,
       game.notes ?? '',
+      game.isFavorite ?? 0,
     ]
   );
 }
@@ -51,6 +54,13 @@ export function updateGame(id: number, game: Game) {
       game.notes ?? '',
       id,
     ]
+  );
+}
+
+export function toggleGameFavorite(id: number, isFavorite: FavoriteValue) {
+  database.runSync(
+    'UPDATE games SET isFavorite = ? WHERE id = ?;',
+    [isFavorite, id]
   );
 }
 
