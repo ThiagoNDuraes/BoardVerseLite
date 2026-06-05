@@ -9,12 +9,14 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import CollectionSummary from '../components/CollectionSummary';
 import GameCard from '../components/GameCard';
 import {
   filterGames,
   GameStatusFilter,
   STATUS_FILTER_OPTIONS,
 } from '../helpers/gameFilters';
+import { getCollectionStats } from '../helpers/gameStats';
 import { getGames } from '../repositories/gameRepository';
 import { Game } from '../types/game';
 import { RootStackParamList } from '../types/navigation';
@@ -42,12 +44,16 @@ export default function HomeScreen() {
     [games, search, statusFilter]
   );
 
+  const collectionStats = useMemo(() => getCollectionStats(games), [games]);
+
   return (
     <View style={styles.container}>
       <View style={styles.headerCard}>
         <Text style={styles.title}>Sua coleção</Text>
         <Text style={styles.subtitle}>{games.length} jogo(s) cadastrado(s)</Text>
       </View>
+
+      <CollectionSummary stats={collectionStats} />
 
       <TextInput
         placeholder="Buscar por nome ou categoria"
