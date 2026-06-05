@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { CollectionStats } from '../helpers/gameStats';
+import { colors } from '../theme/colors';
 
 type Props = {
   stats: CollectionStats;
@@ -9,34 +10,34 @@ type Props = {
 export default function CollectionSummary({ stats }: Props) {
   return (
     <View style={styles.container}>
-      <View style={styles.item}>
-        <Text style={styles.number}>{stats.available}</Text>
-        <Text style={styles.label}>Disponíveis</Text>
-      </View>
+      <SummaryItem label="Disp." value={stats.available} color={colors.success} />
+      <SummaryItem label="Emp." value={stats.borrowed} color={colors.warning} />
+      <SummaryItem label="Zer." value={stats.completed} color={colors.primaryLight} />
+      <SummaryItem label="Fav." value={stats.favorites} color={colors.warning} />
+    </View>
+  );
+}
 
-      <View style={styles.item}>
-        <Text style={styles.number}>{stats.borrowed}</Text>
-        <Text style={styles.label}>Emprestados</Text>
-      </View>
+type SummaryItemProps = {
+  label: string;
+  value: number;
+  color: string;
+};
 
-      <View style={styles.item}>
-        <Text style={styles.number}>{stats.completed}</Text>
-        <Text style={styles.label}>Zerados</Text>
-      </View>
-
-      <View style={styles.item}>
-        <Text style={styles.number}>{stats.favorites}</Text>
-        <Text style={styles.label}>Favoritos</Text>
-      </View>
+function SummaryItem({ label, value, color }: SummaryItemProps) {
+  return (
+    <View style={styles.item}>
+      <Text style={[styles.number, { color }]}>{value}</Text>
+      <Text style={styles.label}>{label}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f7efe3',
-    borderColor: '#d0b08b',
-    borderRadius: 18,
+    backgroundColor: colors.card,
+    borderColor: colors.border,
+    borderRadius: 22,
     borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -48,15 +49,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   number: {
-    color: '#2f2116',
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: 20,
+    fontWeight: '900',
   },
   label: {
-    color: '#6d5642',
-    fontSize: 11,
-    fontWeight: '700',
-    marginTop: 2,
-    textAlign: 'center',
+    color: colors.textSoft,
+    fontSize: 12,
+    fontWeight: '800',
+    marginTop: 3,
   },
 });

@@ -4,6 +4,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import {
   Alert,
   FlatList,
+  Image,
   Pressable,
   StyleSheet,
   Text,
@@ -23,6 +24,7 @@ import {
   suggestAvailableGame,
 } from '../helpers/gameSuggestion';
 import { getGames } from '../repositories/gameRepository';
+import { colors } from '../theme/colors';
 import { Game } from '../types/game';
 import { RootStackParamList } from '../types/navigation';
 
@@ -79,54 +81,78 @@ export default function HomeScreen() {
     );
   }
 
+  function renderHeader() {
+    return (
+      <>
+        <View style={styles.brandRow}>
+          <Image
+            source={require('../../assets/boardverse-logo.png')}
+            style={styles.logo}
+          />
+
+          <View style={styles.brandTextArea}>
+            <Text style={styles.appName}>BoardVerse Lite</Text>
+            <Text style={styles.appSubtitle}>Sua coleção em um só lugar</Text>
+          </View>
+        </View>
+
+        <View style={styles.heroCard}>
+          <View style={styles.heroContent}>
+            <Text style={styles.heroLabel}>Biblioteca</Text>
+            <Text style={styles.heroTitle}>{games.length} jogo(s)</Text>
+            <Text style={styles.heroText}>
+              Busque, filtre e escolha o melhor jogo para a mesa.
+            </Text>
+          </View>
+
+          <Pressable style={styles.suggestButton} onPress={handleSuggestGame}>
+            <Text style={styles.suggestButtonText}>Sugerir</Text>
+          </Pressable>
+        </View>
+
+        <CollectionSummary stats={collectionStats} />
+
+        <TextInput
+          placeholder="Buscar por nome, domínio ou categoria"
+          placeholderTextColor={colors.textSoft}
+          value={search}
+          onChangeText={setSearch}
+          style={styles.searchInput}
+        />
+
+        <View style={styles.filterRow}>
+          {STATUS_FILTER_OPTIONS.map((option) => {
+            const active = statusFilter === option;
+
+            return (
+              <Pressable
+                key={option}
+                style={[styles.filterChip, active && styles.filterChipActive]}
+                onPress={() => setStatusFilter(option)}
+              >
+                <Text
+                  style={[
+                    styles.filterChipText,
+                    active && styles.filterChipTextActive,
+                  ]}
+                >
+                  {option}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <View style={styles.headerCard}>
-        <Text style={styles.title}>Sua coleção</Text>
-        <Text style={styles.subtitle}>{games.length} jogo(s) cadastrado(s)</Text>
-      </View>
-
-      <CollectionSummary stats={collectionStats} />
-
-      <Pressable style={styles.suggestionButton} onPress={handleSuggestGame}>
-        <Text style={styles.suggestionButtonText}>Sugerir jogo</Text>
-      </Pressable>
-
-      <TextInput
-        placeholder="Buscar por nome ou categoria"
-        placeholderTextColor="#90745a"
-        value={search}
-        onChangeText={setSearch}
-        style={styles.searchInput}
-      />
-
-      <View style={styles.filterRow}>
-        {STATUS_FILTER_OPTIONS.map((option) => {
-          const active = statusFilter === option;
-
-          return (
-            <Pressable
-              key={option}
-              style={[styles.filterChip, active ? styles.filterChipActive : null]}
-              onPress={() => setStatusFilter(option)}
-            >
-              <Text
-                style={[
-                  styles.filterChipText,
-                  active ? styles.filterChipTextActive : null,
-                ]}
-              >
-                {option}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
-
       <FlatList
         data={filteredGames}
         keyExtractor={(item) => String(item.id)}
         showsVerticalScrollIndicator={false}
+        ListHeaderComponent={renderHeader}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
           <GameCard
@@ -148,7 +174,7 @@ export default function HomeScreen() {
         style={styles.primaryButton}
         onPress={() => navigation.navigate('GameForm')}
       >
-        <Text style={styles.primaryButtonText}>Novo jogo</Text>
+        <Text style={styles.primaryButtonText}>+ Novo jogo</Text>
       </Pressable>
     </View>
   );
@@ -156,102 +182,143 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#efe3cf',
+    backgroundColor: colors.background,
     flex: 1,
-    padding: 16,
   },
-  headerCard: {
-    backgroundColor: '#d9c0a2',
-    borderColor: '#b48c63',
-    borderRadius: 20,
+  listContent: {
+    padding: 16,
+    paddingBottom: 105,
+  },
+  brandRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 16,
+    marginTop: 4,
+  },
+  logo: {
+    borderRadius: 18,
+    height: 58,
+    width: 58,
+  },
+  brandTextArea: {
+    flex: 1,
+  },
+  appName: {
+    color: colors.text,
+    fontSize: 24,
+    fontWeight: '900',
+  },
+  appSubtitle: {
+    color: colors.textMuted,
+    fontSize: 13,
+    marginTop: 2,
+  },
+  heroCard: {
+    alignItems: 'center',
+    backgroundColor: colors.card,
+    borderColor: colors.border,
+    borderRadius: 26,
     borderWidth: 1,
+    flexDirection: 'row',
+    gap: 12,
+    justifyContent: 'space-between',
     marginBottom: 14,
     padding: 18,
   },
-  title: {
-    color: '#2f2116',
-    fontSize: 28,
-    fontWeight: '800',
+  heroContent: {
+    flex: 1,
   },
-  subtitle: {
-    color: '#5e4530',
-    fontSize: 15,
-    marginTop: 4,
+  heroLabel: {
+    color: colors.primaryLight,
+    fontSize: 13,
+    fontWeight: '900',
+    textTransform: 'uppercase',
   },
-  suggestionButton: {
-    alignItems: 'center',
-    backgroundColor: '#f4dfbd',
-    borderColor: '#c8954f',
-    borderRadius: 16,
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingVertical: 13,
+  heroTitle: {
+    color: colors.text,
+    fontSize: 34,
+    fontWeight: '900',
+    marginTop: 3,
   },
-  suggestionButtonText: {
-    color: '#6f4215',
-    fontSize: 15,
-    fontWeight: '800',
+  heroText: {
+    color: colors.textMuted,
+    fontSize: 13,
+    lineHeight: 18,
+    marginTop: 5,
+  },
+  suggestButton: {
+    backgroundColor: colors.primary,
+    borderRadius: 999,
+    paddingHorizontal: 18,
+    paddingVertical: 11,
+  },
+  suggestButtonText: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: '900',
   },
   searchInput: {
-    backgroundColor: '#fbf6ee',
-    borderColor: '#cfb08a',
-    borderRadius: 16,
+    backgroundColor: colors.card,
+    borderColor: colors.border,
+    borderRadius: 18,
     borderWidth: 1,
-    color: '#2f2116',
+    color: colors.text,
     marginBottom: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
+    paddingHorizontal: 15,
+    paddingVertical: 13,
   },
   filterRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: 8,
+    justifyContent: 'space-between',
     marginBottom: 14,
   },
   filterChip: {
-    backgroundColor: '#f7efe3',
-    borderColor: '#cbaa82',
+    alignItems: 'center',
+    backgroundColor: colors.cardSoft,
+    borderColor: colors.border,
     borderRadius: 999,
     borderWidth: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    flex: 1,
+    paddingVertical: 9,
   },
   filterChipActive: {
-    backgroundColor: '#6b4323',
-    borderColor: '#6b4323',
+    backgroundColor: colors.primary,
+    borderColor: colors.primaryLight,
   },
   filterChipText: {
-    color: '#6a4e36',
-    fontSize: 13,
-    fontWeight: '700',
+    color: colors.textMuted,
+    fontSize: 12,
+    fontWeight: '800',
   },
   filterChipTextActive: {
-    color: '#fff8ef',
-  },
-  listContent: {
-    flexGrow: 1,
-    paddingBottom: 100,
+    color: colors.white,
   },
   emptyState: {
     alignItems: 'center',
-    marginTop: 54,
-    paddingHorizontal: 20,
+    backgroundColor: colors.card,
+    borderColor: colors.border,
+    borderRadius: 22,
+    borderWidth: 1,
+    marginTop: 8,
+    padding: 22,
   },
   emptyTitle: {
-    color: '#2f2116',
+    color: colors.text,
     fontSize: 18,
-    fontWeight: '800',
+    fontWeight: '900',
   },
   emptyText: {
-    color: '#6d5642',
+    color: colors.textMuted,
     lineHeight: 20,
     marginTop: 8,
     textAlign: 'center',
   },
   primaryButton: {
     alignItems: 'center',
-    backgroundColor: '#6b4323',
-    borderRadius: 18,
+    backgroundColor: colors.primary,
+    borderRadius: 20,
     bottom: 16,
     left: 16,
     paddingVertical: 17,
@@ -259,8 +326,8 @@ const styles = StyleSheet.create({
     right: 16,
   },
   primaryButtonText: {
-    color: '#fff8ef',
+    color: colors.white,
     fontSize: 17,
-    fontWeight: '800',
+    fontWeight: '900',
   },
 });

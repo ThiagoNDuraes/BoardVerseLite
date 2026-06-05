@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { colors } from '../theme/colors';
 import { Game, GameStatus } from '../types/game';
 
 type Props = {
@@ -8,9 +9,9 @@ type Props = {
 };
 
 const STATUS_BADGES: Record<GameStatus, { bg: string; text: string }> = {
-  Disponível: { bg: '#d9ecd0', text: '#355b21' },
-  Emprestado: { bg: '#eadcc8', text: '#7a4f24' },
-  Zerado: { bg: '#e6e0d5', text: '#544435' },
+  Disponível: { bg: 'rgba(34, 197, 94, 0.16)', text: colors.success },
+  Emprestado: { bg: 'rgba(251, 191, 36, 0.16)', text: colors.warning },
+  Zerado: { bg: 'rgba(96, 165, 250, 0.16)', text: colors.primaryLight },
 };
 
 export default function GameCard({ game, onPress }: Props) {
@@ -18,46 +19,53 @@ export default function GameCard({ game, onPress }: Props) {
 
   return (
     <Pressable onPress={onPress} style={styles.card}>
-      <View style={styles.cardTopRow}>
+      <View style={styles.topRow}>
         <View style={styles.titleArea}>
-          <Text style={styles.cardTitle}>{game.name}</Text>
+          <View style={styles.titleRow}>
+            <Text style={styles.title}>{game.name}</Text>
 
-          {game.isFavorite === 1 ? (
-            <Text style={styles.favoriteText}>★ Favorito</Text>
-          ) : null}
+            {game.isFavorite === 1 ? (
+              <Text style={styles.favorite}>★</Text>
+            ) : null}
+          </View>
+
+          <Text style={styles.domain}>{game.domain}</Text>
         </View>
 
-        <View style={[styles.statusBadge, { backgroundColor: badge.bg }]}>
-          <Text style={[styles.statusBadgeText, { color: badge.text }]}>
+        <View style={[styles.badge, { backgroundColor: badge.bg }]}>
+          <Text style={[styles.badgeText, { color: badge.text }]}>
             {game.status}
           </Text>
         </View>
       </View>
 
-      <Text style={styles.cardSubtitle}>{game.domain}</Text>
-      <Text style={styles.cardMeta}>{game.category}</Text>
-      <Text style={styles.cardMeta}>
-        {game.minPlayers}-{game.maxPlayers} jogadores • {game.playTime} min
-      </Text>
-      <Text style={styles.cardMeta}>Complexidade: {game.complexity}</Text>
+      <View style={styles.divider} />
+
+      <Text style={styles.category}>{game.category}</Text>
+
+      <View style={styles.metaRow}>
+        <Text style={styles.meta}>
+          {game.minPlayers}-{game.maxPlayers} jogadores
+        </Text>
+        <Text style={styles.dot}>•</Text>
+        <Text style={styles.meta}>{game.playTime} min</Text>
+      </View>
+
+      <Text style={styles.complexity}>Complexidade: {game.complexity}</Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fbf6ee',
-    borderColor: '#d0b08b',
-    borderRadius: 18,
+    backgroundColor: colors.card,
+    borderColor: colors.border,
+    borderRadius: 22,
     borderWidth: 1,
     marginBottom: 12,
     padding: 16,
-    shadowColor: '#61462e',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 5,
   },
-  cardTopRow: {
+  topRow: {
     alignItems: 'flex-start',
     flexDirection: 'row',
     gap: 12,
@@ -66,35 +74,66 @@ const styles = StyleSheet.create({
   titleArea: {
     flex: 1,
   },
-  cardTitle: {
-    color: '#2f2116',
+  titleRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  title: {
+    color: colors.text,
+    flexShrink: 1,
     fontSize: 21,
+    fontWeight: '900',
+  },
+  favorite: {
+    color: colors.warning,
+    fontSize: 18,
+    fontWeight: '900',
+  },
+  domain: {
+    color: colors.primaryLight,
+    fontSize: 14,
     fontWeight: '800',
+    marginTop: 5,
   },
-  favoriteText: {
-    color: '#9a641f',
-    fontSize: 13,
-    fontWeight: '800',
-    marginTop: 4,
-  },
-  cardSubtitle: {
-    color: '#7c5530',
-    fontSize: 15,
-    fontWeight: '700',
-    marginTop: 8,
-  },
-  cardMeta: {
-    color: '#5d4734',
-    fontSize: 15,
-    marginTop: 4,
-  },
-  statusBadge: {
+  badge: {
     borderRadius: 999,
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
     paddingVertical: 7,
   },
-  statusBadgeText: {
-    fontSize: 12,
-    fontWeight: '800',
+  badgeText: {
+    fontSize: 11,
+    fontWeight: '900',
+  },
+  divider: {
+    backgroundColor: colors.border,
+    height: 1,
+    marginVertical: 12,
+  },
+  category: {
+    color: colors.textMuted,
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  metaRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 7,
+    marginTop: 7,
+  },
+  meta: {
+    color: colors.textSoft,
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  dot: {
+    color: colors.primaryLight,
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  complexity: {
+    color: colors.textSoft,
+    fontSize: 14,
+    marginTop: 6,
   },
 });

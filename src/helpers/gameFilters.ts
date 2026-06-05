@@ -1,13 +1,12 @@
 import { Game, GameStatus } from '../types/game';
 
-export type GameStatusFilter = 'Todos' | 'Favoritos' | GameStatus;
+export type GameStatusFilter = 'Todos' | 'Favoritos' | Exclude<GameStatus, 'Zerado'>;
 
 export const STATUS_FILTER_OPTIONS: GameStatusFilter[] = [
   'Todos',
   'Favoritos',
   'Disponível',
   'Emprestado',
-  'Zerado',
 ];
 
 export function filterGames(
