@@ -61,26 +61,6 @@ A entidade principal do projeto é o jogo de tabuleiro. Cada jogo possui informa
 |---|
 | <img src="docs/screenshots/sugestao.jpg" width="260"> |
 
-### Tela inicial
-
-![Tela inicial](docs/screenshots/home.jpg)
-
-### Lista de jogos
-
-![Lista de jogos](docs/screenshots/lista.jpg)
-
-### Detalhes do jogo
-
-![Detalhes do jogo](docs/screenshots/detalhes.jpg)
-
-### Cadastro de jogo
-
-![Cadastro de jogo](docs/screenshots/cadastro.jpg)
-
-### Sugestão rápida
-
-![Sugestão rápida](docs/screenshots/sugestao.jpg)
-
 ## Como executar o projeto
 
 1. Clonar o repositório:
