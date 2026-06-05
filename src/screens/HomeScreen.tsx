@@ -9,27 +9,23 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import GameCard from '../components/GameCard';
+import {
+  filterGames,
+  GameStatusFilter,
+  STATUS_FILTER_OPTIONS,
+} from '../helpers/gameFilters';
 import { getGames } from '../repositories/gameRepository';
-import { Game, GameStatus } from '../types/game';
+import { Game } from '../types/game';
 import { RootStackParamList } from '../types/navigation';
 
 type HomeNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
-
-type FilterOption = 'Todos' | GameStatus;
-
-const FILTER_OPTIONS: FilterOption[] = ['Todos', 'Disponível', 'Emprestado', 'Zerado'];
-
-const STATUS_BADGES: Record<GameStatus, { bg: string; text: string }> = {
-  Disponível: { bg: '#d9ecd0', text: '#355b21' },
-  Emprestado: { bg: '#eadcc8', text: '#7a4f24' },
-  Zerado: { bg: '#e6e0d5', text: '#544435' },
-};
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeNavigationProp>();
   const [games, setGames] = useState<Game[]>([]);
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<FilterOption>('Todos');
+  const [statusFilter, setStatusFilter] = useState<GameStatusFilter>('Todos');
 
   const loadGames = useCallback(() => {
     setGames(getGames());
@@ -41,19 +37,10 @@ export default function HomeScreen() {
     }, [loadGames])
   );
 
-  const filteredGames = useMemo(() => {
-    const term = search.trim().toLowerCase();
-
-    return games.filter((game) => {
-      const matchesFilter =
-        statusFilter === 'Todos' ? true : game.status === statusFilter;
-
-      const content = `${game.name} ${game.domain} ${game.category} ${game.status}`.toLowerCase();
-      const matchesSearch = !term || content.includes(term);
-
-      return matchesFilter && matchesSearch;
-    });
-  }, [games, search, statusFilter]);
+  const filteredGames = useMemo(
+    () => filterGames(games, search, statusFilter),
+    [games, search, statusFilter]
+  );
 
   return (
     <View style={styles.container}>
@@ -71,7 +58,7 @@ export default function HomeScreen() {
       />
 
       <View style={styles.filterRow}>
-        {FILTER_OPTIONS.map((option) => {
+        {STATUS_FILTER_OPTIONS.map((option) => {
           const active = statusFilter === option;
 
           return (
@@ -98,32 +85,12 @@ export default function HomeScreen() {
         keyExtractor={(item) => String(item.id)}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
-        renderItem={({ item }) => {
-          const badge = STATUS_BADGES[item.status];
-
-          return (
-            <Pressable
-              onPress={() => navigation.navigate('GameDetail', { gameId: item.id! })}
-              style={styles.card}
-            >
-              <View style={styles.cardTopRow}>
-                <Text style={styles.cardTitle}>{item.name}</Text>
-                <View style={[styles.statusBadge, { backgroundColor: badge.bg }]}>
-                  <Text style={[styles.statusBadgeText, { color: badge.text }]}>
-                    {item.status}
-                  </Text>
-                </View>
-              </View>
-
-              <Text style={styles.cardSubtitle}>{item.domain}</Text>
-              <Text style={styles.cardMeta}>{item.category}</Text>
-              <Text style={styles.cardMeta}>
-                {item.minPlayers}-{item.maxPlayers} jogadores • {item.playTime} min
-              </Text>
-              <Text style={styles.cardMeta}>Complexidade: {item.complexity}</Text>
-            </Pressable>
-          );
-        }}
+        renderItem={({ item }) => (
+          <GameCard
+            game={item}
+            onPress={() => navigation.navigate('GameDetail', { gameId: item.id! })}
+          />
+        )}
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Text style={styles.emptyTitle}>Nenhum jogo encontrado</Text>
@@ -207,50 +174,6 @@ const styles = StyleSheet.create({
   listContent: {
     flexGrow: 1,
     paddingBottom: 100,
-  },
-  card: {
-    backgroundColor: '#fbf6ee',
-    borderColor: '#d0b08b',
-    borderRadius: 18,
-    borderWidth: 1,
-    marginBottom: 12,
-    padding: 16,
-    shadowColor: '#61462e',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 5,
-  },
-  cardTopRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 12,
-    justifyContent: 'space-between',
-  },
-  cardTitle: {
-    color: '#2f2116',
-    flex: 1,
-    fontSize: 21,
-    fontWeight: '800',
-  },
-  cardSubtitle: {
-    color: '#7c5530',
-    fontSize: 15,
-    fontWeight: '700',
-    marginTop: 8,
-  },
-  cardMeta: {
-    color: '#5d4734',
-    fontSize: 15,
-    marginTop: 4,
-  },
-  statusBadge: {
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-  },
-  statusBadgeText: {
-    fontSize: 12,
-    fontWeight: '800',
   },
   emptyState: {
     alignItems: 'center',
