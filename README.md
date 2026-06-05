@@ -49,6 +49,18 @@ A entidade principal do projeto é o jogo de tabuleiro. Cada jogo possui informa
 
 ## Telas do aplicativo
 
+| Tela inicial | Lista de jogos |
+|---|---|
+| <img src="docs/screenshots/home.jpg" width="260"> | <img src="docs/screenshots/lista.jpg" width="260"> |
+
+| Detalhes do jogo | Cadastro de jogo |
+|---|---|
+| <img src="docs/screenshots/detalhes.jpg" width="260"> | <img src="docs/screenshots/cadastro.jpg" width="260"> |
+
+| Sugestão rápida |
+|---|
+| <img src="docs/screenshots/sugestao.jpg" width="260"> |
+
 ### Tela inicial
 
 ![Tela inicial](docs/screenshots/home.jpg)
