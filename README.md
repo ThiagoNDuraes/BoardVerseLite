@@ -1,87 +1,101 @@
 # BoardVerse Lite
 
-Aplicativo mobile em React Native com TypeScript para cadastro e organização de jogos de tabuleiro, com persistência local em SQLite.
+Aplicativo mobile desenvolvido em React Native com TypeScript para cadastro, organização e consulta de jogos de tabuleiro. O projeto utiliza persistência local com SQLite e foi desenvolvido como parte da disciplina de Programação para Dispositivos Móveis.
 
-## Funcionalidades
+## Objetivo
 
-- cadastro de jogos
-- listagem com filtro por status
-- busca por nome, domínio ou categoria
-- edição de registros salvos
-- exclusão com confirmação
-- persistência local em SQLite
-- seleção de domínio, categoria, complexidade e status por toque
+O BoardVerse Lite tem como objetivo auxiliar o usuário a organizar uma pequena coleção de jogos de tabuleiro, permitindo cadastrar jogos, consultar informações principais, editar registros e filtrar a coleção de forma simples.
 
 ## Tecnologias utilizadas
 
-- React Native
-- Expo
-- TypeScript
-- Expo SQLite
-- React Navigation
+* React Native
+* Expo
+* Expo SDK 54
+* TypeScript
+* SQLite
+* Expo SQLite
+* React Navigation
+* EAS Build
+
+## Funcionalidades
+
+* Cadastro de jogos
+* Listagem dos jogos cadastrados
+* Edição de registros salvos
+* Exclusão com confirmação
+* Busca por nome, domínio ou categoria
+* Filtro por status
+* Seleção de domínio, categoria, complexidade e status por toque
+* Persistência local dos dados com SQLite
+* Interface mobile com tema visual inspirado em jogos de tabuleiro
+
+## Entidade principal
+
+A entidade principal do projeto é o jogo de tabuleiro. Cada jogo possui informações como:
+
+* nome
+* domínio
+* categoria
+* quantidade mínima e máxima de jogadores
+* tempo médio de partida
+* complexidade
+* status
+* observações
+
+## Como executar o projeto
+
+1. Clonar o repositório:
+
+```bash
+git clone https://github.com/ThiagoNDuraes/BoardVerseLite.git
+```
+
+2. Entrar na pasta do projeto:
+
+```bash
+cd BoardVerseLite
+```
+
+3. Instalar as dependências:
+
+```bash
+npm install
+```
+
+4. Executar o projeto:
+
+```bash
+npx expo start
+```
+
+5. Abrir o aplicativo no Expo Go.
+
+## Versão do Expo
+
+O projeto foi desenvolvido utilizando Expo SDK 54.
+
+## Build Android
+
+O projeto também possui configuração para geração de APK com Expo EAS Build. O arquivo `eas.json` contém o perfil `preview`, configurado para gerar um APK de distribuição interna.
+
+Comando utilizado para gerar o APK:
+
+```bash
+eas build --platform android --profile preview
+```
 
 ## Estrutura do projeto
 
 ```text
 src/
   components/
-    SelectField.tsx
   data/
-    ludopediaTaxonomy.ts
   database/
-    db.ts
   repositories/
-    gameRepository.ts
   screens/
-    HomeScreen.tsx
-    GameFormScreen.tsx
-    GameDetailScreen.tsx
   types/
-    game.ts
-    navigation.ts
 ```
 
-## Como executar
+## Observações
 
-```bash
-npm install
-npx expo start
-```
-
-Depois de iniciar o Expo, basta abrir o projeto no aplicativo Expo Go pelo QR Code gerado no terminal.
-
-## Requisitos atendidos
-
-- aplicação em React Native
-- uso de TypeScript
-- CRUD básico de uma entidade
-- persistência de dados em SQLite
-- projeto pronto para versionamento no GitHub
-
-## Estrutura da entidade
-
-Cada jogo cadastrado possui os seguintes campos:
-
-- nome
-- categoria principal
-- subcategoria
-- mínimo de jogadores
-- máximo de jogadores
-- tempo médio de partida
-- complexidade
-- status
-- observações
-
-
-## Build do APK
-
-```bash
-npm install -g eas-cli
-npx expo install --check
-npx expo-doctor
-eas login
-eas whoami
-eas build --platform android --profile preview
-```
-
-O perfil `preview` no arquivo `eas.json` está configurado para gerar um arquivo `.apk` instalável no Android.
+Os dados são armazenados localmente no dispositivo utilizando SQLite. Ao instalar o aplicativo pela primeira vez, a coleção inicia vazia e os registros são criados pelo próprio usuário.
