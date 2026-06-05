@@ -2,6 +2,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useCallback, useMemo, useState } from 'react';
 import {
+  Alert,
   FlatList,
   Pressable,
   StyleSheet,
@@ -17,6 +18,10 @@ import {
   STATUS_FILTER_OPTIONS,
 } from '../helpers/gameFilters';
 import { getCollectionStats } from '../helpers/gameStats';
+import {
+  formatGameSuggestion,
+  suggestAvailableGame,
+} from '../helpers/gameSuggestion';
 import { getGames } from '../repositories/gameRepository';
 import { Game } from '../types/game';
 import { RootStackParamList } from '../types/navigation';
@@ -46,6 +51,34 @@ export default function HomeScreen() {
 
   const collectionStats = useMemo(() => getCollectionStats(games), [games]);
 
+  function handleSuggestGame() {
+    const suggestedGame = suggestAvailableGame(games);
+
+    if (!suggestedGame) {
+      Alert.alert(
+        'Nenhum jogo disponível',
+        'Cadastre um jogo ou altere o status de algum jogo para Disponível.'
+      );
+      return;
+    }
+
+    Alert.alert(
+      'Sugestão de jogo',
+      `${suggestedGame.name}\n\n${formatGameSuggestion(suggestedGame)}`,
+      [
+        {
+          text: 'Ver detalhes',
+          onPress: () =>
+            navigation.navigate('GameDetail', { gameId: suggestedGame.id! }),
+        },
+        {
+          text: 'Fechar',
+          style: 'cancel',
+        },
+      ]
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.headerCard}>
@@ -54,6 +87,10 @@ export default function HomeScreen() {
       </View>
 
       <CollectionSummary stats={collectionStats} />
+
+      <Pressable style={styles.suggestionButton} onPress={handleSuggestGame}>
+        <Text style={styles.suggestionButtonText}>Sugerir jogo</Text>
+      </Pressable>
 
       <TextInput
         placeholder="Buscar por nome ou categoria"
@@ -140,6 +177,20 @@ const styles = StyleSheet.create({
     color: '#5e4530',
     fontSize: 15,
     marginTop: 4,
+  },
+  suggestionButton: {
+    alignItems: 'center',
+    backgroundColor: '#f4dfbd',
+    borderColor: '#c8954f',
+    borderRadius: 16,
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingVertical: 13,
+  },
+  suggestionButtonText: {
+    color: '#6f4215',
+    fontSize: 15,
+    fontWeight: '800',
   },
   searchInput: {
     backgroundColor: '#fbf6ee',
